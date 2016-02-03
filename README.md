@@ -127,37 +127,18 @@ The demo performs detection using a VGG16 network trained for detection on PASCA
 1. Download the training, validation, test data and VOCdevkit
 
 	```Shell
-	wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
-	wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2007/VOCtest_06-Nov-2007.tar
-	wget http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2007/VOCdevkit_08-Jun-2007.tar
+	Download ethier ILSVRC2013 or ILSVRC2014 detecetion task data, including image, bbox label, devkit.
 	```
 
-2. Extract all of these tars into one directory named `VOCdevkit`
+2. Put the right directory to `ILSVRC folder`
 
 	```Shell
-	tar xvf VOCtrainval_06-Nov-2007.tar
-	tar xvf VOCtest_06-Nov-2007.tar
-	tar xvf VOCdevkit_08-Jun-2007.tar
+	cd $FRCN_ROOT/lib/datasets
+	vim factory_imagenet.py
+	change devkit_path = 'path to your ILSVRC folder'
 	```
-
-3. It should have this basic structure
-
-	```Shell
-  	$VOCdevkit/                           # development kit
-  	$VOCdevkit/VOCcode/                   # VOC utility code
-  	$VOCdevkit/VOC2007                    # image sets, annotations, etc.
-  	# ... and several other directories ...
-  	```
-
-4. Create symlinks for the PASCAL VOC dataset
-
-	```Shell
-    cd $FRCN_ROOT/data
-    ln -s $VOCdevkit VOCdevkit2007
-    ```
-    Using symlinks is a good idea because you will likely want to share the same PASCAL dataset installation between multiple projects.
-5. [Optional] follow similar steps to get PASCAL VOC 2010 and 2012
-6. Follow the next sections to download pre-trained ImageNet models
+	
+3. Follow the next sections to download pre-trained ImageNet models
 
 ### Download pre-trained ImageNet models
 
@@ -172,26 +153,13 @@ ZF was trained at MSRA.
 
 ### Usage
 
-To train and test a Faster R-CNN detector using the **alternating optimization** algorithm from our NIPS 2015 paper, use `experiments/scripts/faster_rcnn_alt_opt.sh`.
+I only make training, testing model architecture, experimental shell code on end2end version.
+To train and test a Faster R-CNN detector using the **approximate joint training** method, use `experiments/scripts/faster_rcnn_end2end_imagenet.sh`.
 Output is written underneath `$FRCN_ROOT/output`.
 
 ```Shell
 cd $FRCN_ROOT
-./experiments/scripts/faster_rcnn_alt_opt.sh [GPU_ID] [NET] [--set ...]
-# GPU_ID is the GPU you want to train on
-# NET in {ZF, VGG_CNN_M_1024, VGG16} is the network arch to use
-# --set ... allows you to specify fast_rcnn.config options, e.g.
-#   --set EXP_DIR seed_rng1701 RNG_SEED 1701
-```
-
-("alt opt" refers to the alternating optimization training algorithm described in the NIPS paper.)
-
-To train and test a Faster R-CNN detector using the **approximate joint training** method, use `experiments/scripts/faster_rcnn_end2end.sh`.
-Output is written underneath `$FRCN_ROOT/output`.
-
-```Shell
-cd $FRCN_ROOT
-./experiments/scripts/faster_rcnn_end2end.sh [GPU_ID] [NET] [--set ...]
+./experiments/scripts/faster_rcnn_end2end_imagenet.sh [GPU_ID] [NET] [--set ...]
 # GPU_ID is the GPU you want to train on
 # NET in {ZF, VGG_CNN_M_1024, VGG16} is the network arch to use
 # --set ... allows you to specify fast_rcnn.config options, e.g.
@@ -199,3 +167,10 @@ cd $FRCN_ROOT
 ```
 
 This method trains the RPN module jointly with the Fast R-CNN network, rather than alternating between training the two. It results in faster (~ 1.5x speedup) training times and similar detection accuracy. See these [slides](https://www.dropbox.com/s/xtr4yd4i5e0vw8g/iccv15_tutorial_training_rbg.pdf?dl=0) for more details.
+
+### Reference
+* Faster RCNN, MSR [[Paper]](http://arxiv.org/pdf/1506.01497v3.pdf)
+  * Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun, `Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks`, arXiv:1506.01497.
+
+* Thanks for Ross Girshick making everthing publicly available!
+* [[How to train fast rcnn on imagenet]](http://sunshineatnoon.github.io/Train-fast-rcnn-model-on-imagenet-without-matlab/)
