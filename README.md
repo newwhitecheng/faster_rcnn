@@ -168,6 +168,24 @@ cd $FRCN_ROOT
 
 This method trains the RPN module jointly with the Fast R-CNN network, rather than alternating between training the two. It results in faster (~ 1.5x speedup) training times and similar detection accuracy. See these [slides](https://www.dropbox.com/s/xtr4yd4i5e0vw8g/iccv15_tutorial_training_rbg.pdf?dl=0) for more details.
 
+### Different to the original Faster RCNN python version
+1. The main different is at $FRCN_ROOT/lib/datasets. I create additional two Python code called __factory_imagenet.py__ and __imagenet.py__ for matching ILSVRC detection task dataset.
+   * __factory_imagenet.py__: I change data split into 'train', 'val', 'val1', 'val2', 'test' from '2007', '2012', 'train', 'val', 'trainval', 'test'. Variable "devkit_path" must be set into "path to ILSVRC folder". The other changes are fited for imagenet.py usage.
+   * __imagenet.py__: I set categories name from ILSVRC meta_det.mat, get every image index, path, link, and ground truth bounding box. The most important, because the coordinates of bbox ground truth provided by ImageNet Det start from 0, but Pascal Voc dataset start from 1, I make change in "_load_imagenet_annotation" function on bbox coordinates setting. Besides, "_write_imagenet_results_file" function is also change to fit my evaluation code modified from Pascal Voc.
+
+2. My evaluation code is modified from Pascal Voc directly which are __get_imagenet_opts.m__ and __imagenet_eval.m__ in $FRCN_ROOT/lib/datasets/VOCdevkit-matlab-wrapper. Alos, the change is for fitting ILSVRC dataset.
+
+3. The last change I make is in $FRCN_ROOT/tools, including __train_net_imagenet.py__ and __test_net_imagenet.py__ modified from __train_net__ and __test_net__ directly. The only change in those two code is at import module. "from datasets.factory import get_imdb" is changed into "from datasets.factory_imagenet import get_imdb" due to my setting above.
+
+4. It also provides __Faset RCNN__ version training and testing. You just need to put the region proposal produced by one of them:
+    * Selective Search: [original matlab code](http://disi.unitn.it/~uijlings/MyHomepage/index.php#page=projects1), [python wrapper](https://github.com/sergeyk/selective_search_ijcv_with_python)
+    * EdgeBoxes: [matlab code](https://github.com/pdollar/edges)
+    * GOP and LPO: [python code](http://www.philkr.net/)
+    * MCG: [matlab code](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/mcg/)
+    * RIGOR: [matlab code](http://cpl.cc.gatech.edu/projects/RIGOR/)
+   
+    and put the region proposal result in a new folder named "selective_search_data" and put this folder in the "path to ILSVRC folder".     The code for data preparing by __factory_imagenet.py__ and __imagenet.py__ will handle it. Then, you need to change model config     setting to enable Fast RCNN.
+
 ### Reference
 * Faster RCNN, MSR [[Paper]](http://arxiv.org/pdf/1506.01497v3.pdf)
   * Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun, `Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks`, arXiv:1506.01497.
