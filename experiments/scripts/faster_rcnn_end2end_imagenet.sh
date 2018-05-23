@@ -11,6 +11,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
+#NET='VGG16'
 NET=$2
 NET_lc=${NET,,}
 ITERS=100000
@@ -25,15 +26,16 @@ EXTRA_ARGS_SLUG=${EXTRA_ARGS// /_}
 LOG="experiments/logs/faster_rcnn_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
-
-NET_INIT=data/imagenet_models/${NET}.v2.caffemodel
-
+NET_INIT=data/imagenet_models/${NET}.caffemodel
+#NET_INIT=data/imagenet_models/${NET}.v2.caffemodel
+#data/imagenet_models/VGG16.v2.caffemodel
 time ./tools/train_net_imagenet.py --gpu ${GPU_ID} \
-  --solver models/${NET}/faster_rcnn_end2end/solver.prototxt \
+  --solver models/${NET}/faster_rcnn_end2end_imagenet/solver.prototxt \
+ # --solver models/${NET}/faster_rcnn_end2end/solver.prototxt \
   --weights ${NET_INIT} \
   --imdb ${DATASET_TRAIN} \
   --iters ${ITERS} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  --cfg experiments/cfgs/faster_rcnn_end2end_imagenet.yml \
   ${EXTRA_ARGS}
 
 set +x
@@ -41,8 +43,8 @@ NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print
 set -x
 
 time ./tools/test_net_imagenet.py --gpu ${GPU_ID} \
-  --def models/${NET}/faster_rcnn_end2end/test.prototxt \
+  --def models/${NET}/faster_rcnn_end2end_imagenet/test.prototxt \
   --net ${NET_FINAL} \
   --imdb ${DATASET_TEST} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  --cfg experiments/cfgs/faster_rcnn_end2end_imagenet.yml \
   ${EXTRA_ARGS}

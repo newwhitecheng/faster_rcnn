@@ -11,7 +11,7 @@ __sets = {}
 
 import datasets.imagenet
 import numpy as np
-
+import pdb
 def _selective_search_IJCV_top_k(split, year, top_k):
     """Return an imdb that uses the top k proposals from the selective search
     IJCV code.
@@ -23,7 +23,8 @@ def _selective_search_IJCV_top_k(split, year, top_k):
 
 for split in ['train', 'val', 'val1', 'val2', 'test']:
     name = 'imagenet_{}'.format(split)
-    devkit_path = '/home/Hao/Work/cvpr16/data/ILSVRC13'
+    devkit_path = '/home/public/ILSVRC14'
+    # create a list of training and validation data such as ['imagenet_val1', 'imagenet_val2']
     __sets[name] = (lambda split=split, devkit_path = devkit_path:datasets.imagenet.imagenet(split,devkit_path))
 
 def get_imdb(name):

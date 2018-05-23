@@ -11,10 +11,9 @@ import numpy as np
 import numpy.random as npr
 from fast_rcnn.config import cfg
 from fast_rcnn.bbox_transform import bbox_transform
-from generate_anchors import generate_anchors
 from utils.cython_bbox import bbox_overlaps
-
-DEBUG = False
+import pdb
+DEBUG = True
 
 class ProposalTargetLayer(caffe.Layer):
     """
@@ -23,16 +22,6 @@ class ProposalTargetLayer(caffe.Layer):
     """
 
     def setup(self, bottom, top):
-        self._anchors = generate_anchors()
-        self._num_anchors = self._anchors.shape[0]
-
-        if DEBUG:
-            print 'anchors:'
-            print self._anchors
-            self._count = 0
-            self._fg_num = 0
-            self._bg_num = 0
-
         layer_params = yaml.load(self.param_str_)
         self._num_classes = layer_params['num_classes']
 
@@ -129,12 +118,14 @@ def _get_bbox_regression_labels(bbox_target_data, num_classes):
 
     clss = bbox_target_data[:, 0]
     bbox_targets = np.zeros((clss.size, 4 * num_classes), dtype=np.float32)
+    print ("bbox_tarts.shape is"+repr(bbox_targets.shape))
     bbox_inside_weights = np.zeros(bbox_targets.shape, dtype=np.float32)
     inds = np.where(clss > 0)[0]
     for ind in inds:
         cls = clss[ind]
         start = 4 * cls
         end = start + 4
+	pdb.set_trace()
         bbox_targets[ind, start:end] = bbox_target_data[ind, 1:]
         bbox_inside_weights[ind, start:end] = cfg.TRAIN.BBOX_INSIDE_WEIGHTS
     return bbox_targets, bbox_inside_weights

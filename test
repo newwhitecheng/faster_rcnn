@@ -1,0 +1,11 @@
+#! /usr/bin/python
+
+__sets = {}
+for split in ['DET_train', 'DET_val']:
+#for split in ['train', 'val', 'val1', 'val2', 'test']:
+    name = 'imagenet_{}'.format(split)
+    devkit_path = '/home/public/ILSVRC14/'
+    #devkit_path = '/media/VSlab2/imagenet/ILSVRC13'
+    __sets[name] = (lambda split=split, devkit_path = devkit_path:datasets.imagenet.imagenet(split,devkit_path))
+    print name
+    print __sets[name]

@@ -89,6 +89,7 @@ __C.TRAIN.BBOX_NORMALIZE_MEANS = (0.0, 0.0, 0.0, 0.0)
 __C.TRAIN.BBOX_NORMALIZE_STDS = (0.1, 0.1, 0.2, 0.2)
 
 # Train using these proposals
+#__C.TRAIN.PROPOSAL_METHOD = 'gt'
 __C.TRAIN.PROPOSAL_METHOD = 'selective_search'
 
 # Make minibatches from images that have similar aspect ratios (i.e. both
@@ -97,7 +98,9 @@ __C.TRAIN.PROPOSAL_METHOD = 'selective_search'
 __C.TRAIN.ASPECT_GROUPING = True
 
 # Use RPN to detect objects
+#2018/05/22
 __C.TRAIN.HAS_RPN = False
+#__C.TRAIN.HAS_RPN = False
 # IOU >= thresh: positive example
 __C.TRAIN.RPN_POSITIVE_OVERLAP = 0.7
 # IOU < thresh: negative example
