@@ -78,7 +78,7 @@ If you find Faster R-CNN useful in your research, please consider citing:
 1. Clone the Faster R-CNN repository
   ```Shell
   # Make sure to clone with --recursive
-  git clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git
+  git clone --recursive https://github.com/newwhitecheng/py-faster-rcnn
   ```
 
 2. We'll call the directory that you cloned Faster R-CNN into `FRCN_ROOT`
