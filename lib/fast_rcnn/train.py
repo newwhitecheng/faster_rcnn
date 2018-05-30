@@ -13,10 +13,9 @@ import roi_data_layer.roidb as rdl_roidb
 from utils.timer import Timer
 import numpy as np
 import os
-
 from caffe.proto import caffe_pb2
 import google.protobuf as pb2
-
+import google.protobuf.text_format
 class SolverWrapper(object):
     """A simple wrapper around Caffe's solver.
     This wrapper gives us control over he snapshotting process, which we

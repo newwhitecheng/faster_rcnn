@@ -181,7 +181,7 @@ __C.DEDUP_BOXES = 1./16.
 __C.PIXEL_MEANS = np.array([[[102.9801, 115.9465, 122.7717]]])
 
 # For reproducibility
-__C.RNG_SEED = 3
+__C.RNG_SEED = 4
 
 # A small number that's used many times
 __C.EPS = 1e-14
@@ -193,7 +193,7 @@ __C.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', '..'))
 __C.DATA_DIR = osp.abspath(osp.join(__C.ROOT_DIR, 'data'))
 
 # Model directory
-__C.MODELS_DIR = osp.abspath(osp.join(__C.ROOT_DIR, 'models', 'pascal_voc'))
+__C.MODELS_DIR = osp.abspath(osp.join(__C.ROOT_DIR, 'models', 'imagenet'))
 
 # Name (or path to) the matlab executable
 __C.MATLAB = 'matlab'
