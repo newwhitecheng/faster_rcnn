@@ -1,6 +1,4 @@
-## Model Zoo
-
-### Imagenet Faster R-CNN trained using end-to-end
+## Test Imagenet Faster R-CNN models
 
 test command for VGG16:
 ```Shell
